@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Classifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Image Classifier</h1>
+    <form method="post"  action="/upload" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".jpg, .png, .jpeg, .bmp">
+        <button type="submit">Upload photo</button>
+    </form>
+</body>
+</html>
