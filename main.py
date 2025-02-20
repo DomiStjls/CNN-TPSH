@@ -8,21 +8,23 @@ from torchvision import models
 import torch.nn as nn
 import os
 
+# prepare model
 url = "https://raw.githubusercontent.com/pytorch/hub/master/imagenet_classes.txt"
 response = requests.get(url)
 response.raise_for_status()
 class_labels = [line.strip() for line in response.text.splitlines()]
 model = models.resnet50(pretrained=True)
 model.eval()
+
+# prepare app
 app = Flask(__name__)
-
-
 secret = secrets.token_urlsafe(32)
 app.secret_key = secret
 
 
 @app.route("/")
 def index():
+    # main window
     if os.path.exists(f"./static/{session.get('path', 'NONE')}"):
         os.remove(f"./static/{session.get('path', 'NONE')}")
     return render_template("index.html", text=session.get("text", ""))
@@ -30,6 +32,7 @@ def index():
 
 @app.route("/upload", methods=["POST"])
 def upload_file_and_predict():
+    # making a prediction
     if "file" not in request.files:
         session["text"] = "No file part"
         return redirect(url_for("index"))
@@ -80,25 +83,27 @@ def upload_file_and_predict():
 
 @app.route("/save", methods=["POST", "GET"])
 def save_file():
+    # saving a file with result of prediction
     if not os.path.exists("./result"):
         os.makedirs("./result")
     try:
-        t = len(
+        number_of_file = len(
             [
                 name
                 for name in os.listdir("./result")
                 if name.startswith("result_of_detection")
             ]
         )
-        with open(f"./result/result_of_detection{t + 1}.txt", "w") as f:
+        with open(f"./result/result_of_detection{number_of_file + 1}.txt", "w") as f:
             f.write(
                 session.get("text", "Predicted class for your image: result not found")
                 + "\nName of file: "
                 + session.get("path", "path for file not found")
             )
         session["text"] = (
-            f"file with results save in ''./result/result_of_detection{t + 1}.txt''"
+            f"the results file is saved in ''./result/result_of_detection{number_of_file + 1}.txt''"
         )
+        session["path"] = "NONE"
     except Exception as e:
         session["text"] = f"Error: {str(e)}"
     return redirect(url_for("index"))
