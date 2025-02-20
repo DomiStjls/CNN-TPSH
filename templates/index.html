@@ -9,11 +9,12 @@
     <h1>Image Classifier</h1>
     <form method="post"  action="/upload" enctype="multipart/form-data">
         <input type="file" name="file" accept=".jpg, .png, .jpeg, .bmp">
-        <button type="submit">Upload photo</button>
+        <button type="submit">Классифицировать</button>
     </form>
 
     <p>{{ text }}</p>
-
+    <form method="post" action="/save">
+        <button type="submit">Сохранить результат</button>
     </form>
 </body>
 </html>
