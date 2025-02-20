@@ -101,7 +101,7 @@ def save_file():
                 + session.get("path", "path for file not found")
             )
         session["text"] = (
-            f"the results file is saved in ''./result/result_of_detection{number_of_file + 1}.txt''"
+            f"The results file is saved in './result/result_of_detection{number_of_file + 1}.txt'"
         )
         session["path"] = "NONE"
     except Exception as e:
