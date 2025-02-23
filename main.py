@@ -7,6 +7,7 @@ import requests
 from torchvision import models
 import torch.nn as nn
 import os
+import datetime
 
 # prepare model
 url = "https://raw.githubusercontent.com/pytorch/hub/master/imagenet_classes.txt"
@@ -94,14 +95,20 @@ def save_file():
                 if name.startswith("result_of_detection")
             ]
         )
-        with open(f"./result/result_of_detection{number_of_file + 1}.txt", "w") as f:
+        if session["path"] == "NONE":
+            session["text"] = "No file to save"
+            return redirect(url_for("index"))
+        tn = datetime.datetime.now().timestamp()
+        tn = hex(int(tn))
+
+        with open(f"./result/result_of_detection{tn}.txt", "w") as f:
             f.write(
                 session.get("text", "Predicted class for your image: result not found")
                 + "\nName of file: "
                 + session.get("path", "path for file not found")
             )
         session["text"] = (
-            f"The results file is saved in './result/result_of_detection{number_of_file + 1}.txt'"
+            f"The results file is saved in './result/result_of_detection{tn}.txt'"
         )
         session["path"] = "NONE"
     except Exception as e:
